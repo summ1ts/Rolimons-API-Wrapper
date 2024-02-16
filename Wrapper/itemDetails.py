@@ -3,26 +3,27 @@ Imports
 '''
 import requests
 from typing import Optional , Union
+from json import load
 
 '''
 Error Imports
 '''
-from .errorException import RateLimit
-from .errorException import ItemNotFound
-from .errorException import InvalidAPI
+from Exception import RateLimit
+from Exception import ItemNotFound
+from Exception import InvalidAPI
 
 
 '''
 Rolimons Items Class
 '''
-class RolimonsItems():
+class Items():
     def __init__(self) -> None:
         self.session = requests.Session()
-        self.itemAPI = 'https://api.rolimons.com/items/v1/itemdetails'
+        self.itemAPI = load(open('Wrapper/endpoints.json' , 'r'))['itemDetails']
         self.itemsCache = self.fetchAllItems()
 
 
-    def fetchAllItems(self) -> dict:
+    def fetchAllItems(self) -> dict | Exception:
         '''
         Fetches and caches all item data from the API.
         '''
@@ -41,7 +42,8 @@ class RolimonsItems():
         else:
             raise InvalidAPI('API error %s' % response.text())
 
-    def ItemInfo(self, searchValue: Union[str, int]) -> Optional[str]:
+
+    def Info(self, searchValue: Union[str, int]) -> str | Exception:
         """
         Fetches item information by item ID, acronym, or name.
         """
@@ -49,5 +51,9 @@ class RolimonsItems():
         for itemId, details in self.itemsCache.items():
             detailsStr = [str(detail).lower() for detail in details]
             if searchValueStr in detailsStr:
-                return ('Item Name: %s, Acronym: %s, RAP: %s, Value: %s, ' 'Default Value: %s, Demand: %s, Trend: %s, ' 'Projected: %s, Hyped: %s, Rare: %s' % tuple(details))
+                return 'Item Name: %s, Acronym: %s, RAP: %s, Value: %s, ' 'Default Value: %s, Demand: %s, Trend: %s, ' 'Projected: %s, Hyped: %s, Rare: %s' % tuple(details)
         raise ItemNotFound('Item not found: %s' % searchValue)
+
+
+iteminfo = Items().Info('valk')
+print(iteminfo)

@@ -1,0 +1,8 @@
+{
+    "itemDetails" : "https://api.rolimons.com/items/v1/itemdetails",
+    "playerDetails" : [
+        "https://api.rolimons.com/players/v1/playersearch?searchstring=",
+        "https://api.rolimons.com/players/v1/playerinfo/",
+        "https://api.rolimons.com/players/v1/playerassets/"
+    ]
+}
